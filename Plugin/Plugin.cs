@@ -39,8 +39,9 @@ namespace SCPKillMessage
                 string scpName = roleType.ToString().Replace("Scp", "SCP-");
                 string damageName = damageHandler?.Type.ToString() ?? "Unknown";
                 var attacker = damageHandler?.Attacker;
+                string killerName = attacker?.Nickname ?? "Unknown";
 
-                if (attacker == player)
+                if (killerName == "Unknown")
                 {
                     // Suicide message
                     message = Config.SuicideMessage
@@ -50,7 +51,6 @@ namespace SCPKillMessage
                 }
                 else
                 {
-                    string killerName = attacker?.Nickname ?? "Unknown";
                     // Kill message
                     message = Config.KillMessage
                         .Replace("{role}", scpName)
