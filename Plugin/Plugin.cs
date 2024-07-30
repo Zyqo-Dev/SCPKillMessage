@@ -1,7 +1,7 @@
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Exiled.Events.EventArgs.Player;
-using PluginAPI.Core.Attributes;
+using PlayerRoles;
 using System;
 
 namespace SCPKillMessage
@@ -30,10 +30,13 @@ namespace SCPKillMessage
             var player = ev.Player;
             var damageHandler = ev.DamageHandler;
 
-            if (player.Role.Type.ToString().StartsWith("Scp"))
+            var roleType = player.Role.Type;
+
+            // Check if the role type starts with "Scp" and is not SCP-049-2
+            if (roleType.ToString().StartsWith("Scp") && roleType != RoleTypeId.Scp0492)
             {
                 string message;
-                string scpName = player.Role.Type.ToString().Replace("Scp", "Scp-");
+                string scpName = roleType.ToString().Replace("Scp", "SCP-");
                 string damageName = damageHandler?.Type.ToString() ?? "Unknown";
                 var attacker = damageHandler?.Attacker;
 
