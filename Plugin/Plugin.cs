@@ -11,6 +11,7 @@ namespace SCPKillMessage
         public override string Name => "SCPKillMessage";
         public override string Author => "Kuze";
         public override string Prefix => "scp_kill_msg";
+        public override Version Version => new Version(1, 0, 3);
         public override Version RequiredExiledVersion => new Version(8, 11, 0);
 
         public override void OnEnabled()
