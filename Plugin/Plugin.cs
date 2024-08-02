@@ -27,6 +27,9 @@ namespace SCPKillMessage
 
         private void OnPlayerDying(DyingEventArgs ev)
         {
+            if (!Config.IsEnabled)
+                return;
+
             var player = ev.Player;
             var damageHandler = ev.DamageHandler;
 
@@ -35,13 +38,13 @@ namespace SCPKillMessage
             // Check if the role type starts with "Scp" and is not SCP-049-2
             if (roleType.ToString().StartsWith("Scp") && roleType != RoleTypeId.Scp0492)
             {
-                string message;
+                string message = null;
                 string scpName = roleType.ToString().Replace("Scp", "SCP-");
                 string damageName = damageHandler?.Type.ToString() ?? "Unknown";
                 var attacker = damageHandler?.Attacker;
                 string killerName = attacker?.Nickname ?? "Unknown";
 
-                if (killerName == "Unknown")
+                if (killerName == "Unknown" && Config.EnableSuicideMessage)
                 {
                     // Suicide message
                     message = Config.SuicideMessage
@@ -49,7 +52,7 @@ namespace SCPKillMessage
                         .Replace("{nickname}", player.Nickname)
                         .Replace("{reason}", damageName);
                 }
-                else
+                else if (killerName != "Unknown" && Config.EnableKillMessage)
                 {
                     // Kill message
                     message = Config.KillMessage
@@ -59,7 +62,10 @@ namespace SCPKillMessage
                         .Replace("{reason}", damageName);
                 }
 
-                Map.Broadcast(new Exiled.API.Features.Broadcast(message, Config.BroadcastDuration));
+                if (message != null)
+                {
+                    Map.Broadcast(new Exiled.API.Features.Broadcast(message, Config.BroadcastDuration));
+                }
             }
         }
     }
